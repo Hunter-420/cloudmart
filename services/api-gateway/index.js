@@ -20,10 +20,10 @@ const routes = {
 };
 
 for (const [path, target] of Object.entries(routes)) {
-  app.use(path, createProxyMiddleware({
+  app.use(createProxyMiddleware({
+    pathFilter: path,
     target,
     changeOrigin: true,
-    pathRewrite: { [`^${path}`]: path },
     logLevel: 'debug'
   }));
 }

@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # ---- Infrastructure ----
   postgres:
     image: postgres:15
     environment:
@@ -9,7 +8,7 @@ services:
       POSTGRES_PASSWORD: cloudmart_pass
       POSTGRES_DB: cloudmart
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -20,8 +19,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -33,17 +32,16 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - '6379:6379'
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       retries: 5
 
-  # ---- API Gateway ----
   api-gateway:
     build: ./services/api-gateway
     ports:
-      - '3000:3001'
+      - "3000:3001"
     environment:
       PORT: 3001
       NODE_ENV: development
@@ -57,11 +55,10 @@ services:
       - product-service
       - order-service
 
-  # ---- Auth Service ----
   auth-service:
     build: ./services/auth-service
     ports:
-      - '3002:3002'
+      - "3002:3002"
     environment:
       PORT: 3002
       NODE_ENV: development
@@ -72,11 +69,10 @@ services:
       postgres:
         condition: service_healthy
 
-  # ---- Product Service ----
   product-service:
     build: ./services/product-service
     ports:
-      - '3003:3003'
+      - "3003:3003"
     environment:
       PORT: 3003
       NODE_ENV: development
@@ -85,11 +81,10 @@ services:
       postgres:
         condition: service_healthy
 
-  # ---- Cart Service ----
   cart-service:
     build: ./services/cart-service
     ports:
-      - '3004:3004'
+      - "3004:3004"
     environment:
       PORT: 3004
       NODE_ENV: development
@@ -98,11 +93,10 @@ services:
       redis:
         condition: service_healthy
 
-  # ---- Order Service ----
   order-service:
     build: ./services/order-service
     ports:
-      - '3005:3005'
+      - "3005:3005"
     environment:
       PORT: 3005
       NODE_ENV: development
@@ -115,11 +109,10 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # ---- Payment Service ----
   payment-service:
     build: ./services/payment-service
     ports:
-      - '3006:3006'
+      - "3006:3006"
     environment:
       PORT: 3006
       NODE_ENV: development
@@ -129,11 +122,10 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # ---- Inventory Service ----
   inventory-service:
     build: ./services/inventory-service
     ports:
-      - '3007:3007'
+      - "3007:3007"
     environment:
       PORT: 3007
       NODE_ENV: development
@@ -142,11 +134,10 @@ services:
       postgres:
         condition: service_healthy
 
-  # ---- Notification Service ----
   notification-service:
     build: ./services/notification-service
     ports:
-      - '3008:3008'
+      - "3008:3008"
     environment:
       PORT: 3008
       NODE_ENV: development
@@ -156,11 +147,10 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # ---- Analytics Service ----
   analytics-service:
     build: ./services/analytics-service
     ports:
-      - '3009:3009'
+      - "3009:3009"
     environment:
       PORT: 3009
       NODE_ENV: development

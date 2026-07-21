@@ -15,7 +15,7 @@ app.get('/health', (req, res) => {
 
 app.post('/api/orders', (req, res) => {
   const { cartId, shippingAddressId, paymentMethodId } = req.body;
-  
+
   if (!cartId || !shippingAddressId || !paymentMethodId) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -27,7 +27,7 @@ app.post('/api/orders', (req, res) => {
     totalAmount: 59.98, // Mocked for demo
     createdAt: new Date().toISOString()
   };
-  
+
   orders.push(newOrder);
 
   // Publish to RabbitMQ (Mocking it for now since we don't have a real RabbitMQ connection in this demo file)
