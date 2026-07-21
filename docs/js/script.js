@@ -3,6 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs  = document.querySelectorAll('.tab');
   const searchInput = document.getElementById('search-input');
 
+  // Configure marked.js to use highlight.js for code blocks
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    }
+  });
+
   const activate = (targetId) => {
     tabs.forEach(t  => t.classList.toggle('active', t.id === targetId));
     links.forEach(l => l.classList.toggle('active', l.dataset.target === targetId));
@@ -59,7 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('volumes/' + fileName);
       if (!res.ok) throw new Error('Failed to load');
       const text = await res.text();
-      container.innerHTML = marked.parse(text);
+      
+      // Parse markdown and inject
+      container.innerHTML = `<div class="markdown-body">${marked.parse(text)}</div>`;
       container.dataset.loaded = 'true';
     } catch (e) {
       container.innerHTML = '<div class="alert alert-danger">Error loading document.</div>';
@@ -70,14 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase();
-      // Extremely basic client side search: just highlight matching nav links
-      // Or filter nav links
+      
+      // 1. Filter Sidebar Links
+      let hasVisibleLinks = false;
       links.forEach(link => {
         const text = link.textContent.toLowerCase();
         if (text.includes(term)) {
           link.style.display = 'block';
+          hasVisibleLinks = true;
         } else {
           link.style.display = 'none';
+        }
+      });
+
+      // 2. Filter API Endpoints currently visible on the page
+      const endpoints = document.querySelectorAll('.tab.active .endpoint');
+      endpoints.forEach(ep => {
+        const text = ep.textContent.toLowerCase();
+        if (text.includes(term)) {
+          ep.style.display = 'block';
+        } else {
+          ep.style.display = 'none';
         }
       });
     });

@@ -45,6 +45,7 @@ body {
 .sidebar-header {
   padding: 1.5rem 1.5rem 1rem;
   border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
 }
 
 .brand {
@@ -222,27 +223,6 @@ p { color: var(--text-muted); margin-bottom: 1rem; }
 }
 .step p { margin: 0.25rem 0 0; }
 
-/* ======================= TABLE ======================= */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-}
-.table th {
-  padding: 0.65rem 0.75rem;
-  text-align: left;
-  background: #f1f5f9;
-  color: var(--text);
-  font-weight: 600;
-  border-bottom: 1px solid var(--border);
-}
-.table td {
-  padding: 0.65rem 0.75rem;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-muted);
-}
-
 /* ======================= ENDPOINT ======================= */
 .endpoint {
   border: 1px solid var(--border);
@@ -283,17 +263,44 @@ p { color: var(--text-muted); margin-bottom: 1rem; }
 
 .req { color: var(--danger); font-weight: 700; }
 
+/* ======================= TABLE ======================= */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+.table th {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  background: #f1f5f9;
+  color: var(--text);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.table code {
+  background: #f1f5f9;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  color: var(--danger);
+  font-size: 0.82rem;
+}
+
 /* ======================= PRE / CODE ======================= */
 pre {
-  background: #1e293b;
-  padding: 1rem 1.25rem;
+  background: #0f172a;
+  padding: 1.25rem;
   border-radius: 0.5rem;
   overflow-x: auto;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }
-pre code { font-family: 'Fira Code', monospace; font-size: 0.82rem; color: #a5b4fc; line-height: 1.7; }
+pre code { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: #f8fafc; line-height: 1.6; background: transparent; padding: 0; }
 code { font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #f1f5f9; padding: 0.15rem 0.3rem; border-radius: 4px; color: #e11d48; }
-pre code { background: none; padding: 0; color: #a5b4fc; }
 
 .loading {
   text-align: center;
@@ -302,13 +309,29 @@ pre code { background: none; padding: 0; color: #a5b4fc; }
   font-weight: 500;
 }
 
-/* ======================= MARKDOWN DYNAMIC STYLES ======================= */
-[id^="vol-"] ul { padding-left: 1.5rem; margin-bottom: 1rem; color: var(--text-muted); }
-[id^="vol-"] li { margin-bottom: 0.25rem; }
-[id^="vol-"] a { color: var(--accent); text-decoration: none; }
-[id^="vol-"] a:hover { text-decoration: underline; }
-[id^="vol-"] h2 { font-size: 1.5rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-top: 2rem; }
-[id^="vol-"] h3 { font-size: 1.25rem; color: var(--text); margin-top: 1.5rem; }
+/* ======================= MARKDOWN RICH STYLES (.markdown-body) ======================= */
+.markdown-body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  line-height: 1.65;
+}
+.markdown-body h1 { font-size: 2rem; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem; }
+.markdown-body h2 { font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem; }
+.markdown-body h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-body h4 { font-size: 1rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-body p { margin-bottom: 1rem; color: var(--text); }
+.markdown-body ul, .markdown-body ol { padding-left: 2rem; margin-bottom: 1rem; color: var(--text); }
+.markdown-body li { margin-bottom: 0.25rem; }
+.markdown-body a { color: var(--accent); text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body blockquote { border-left: 4px solid var(--accent); padding-left: 1rem; margin: 1.5rem 0; color: var(--text-muted); background: #f8fafc; padding: 1rem; border-radius: 0.25rem; }
+.markdown-body table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.markdown-body table th { padding: 0.75rem; background: #f1f5f9; font-weight: 600; text-align: left; border: 1px solid var(--border); }
+.markdown-body table td { padding: 0.75rem; border: 1px solid var(--border); }
+.markdown-body img { max-width: 100%; border-radius: 0.5rem; box-shadow: var(--shadow-sm); }
+.markdown-body pre { background: #0f172a; padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; margin: 1rem 0; }
+.markdown-body pre code { color: #f8fafc; background: transparent; padding: 0; font-family: 'Fira Code', monospace; }
+.markdown-body code { font-family: 'Fira Code', monospace; background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: #e11d48; }
 
 @media (max-width: 768px) {
   .sidebar { display: none; }
