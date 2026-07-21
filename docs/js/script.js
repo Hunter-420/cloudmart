@@ -111,7 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.innerHTML = '<div class="loading">Loading document...</div>';
     try {
-      const res = await fetch('volumes/' + fileName);
+      // Robust relative path resolution for GitHub Pages
+      let baseUrl = window.location.href.split('#')[0];
+      if (baseUrl.endsWith('.html')) {
+        baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+      } else if (!baseUrl.endsWith('/')) {
+        baseUrl += '/';
+      }
+      
+      const res = await fetch(baseUrl + 'volumes/' + fileName);
       if (!res.ok) throw new Error('Failed to load');
       const text = await res.text();
       
