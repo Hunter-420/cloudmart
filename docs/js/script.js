@@ -103,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'vol-10': 'volume-10-security-architecture.md',
       'vol-11': 'volume-11-database-design.md',
       'vol-12': 'volume-12-development-roadmap.md',
-      'vol-13': 'volume-13-testing-and-integration.md'
+      'vol-13': 'volume-13-testing-and-integration.md',
+      'vol-14': 'volume-14-directory-structure.md'
     };
 
     const fileName = fileMap[targetId];
@@ -126,7 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
       container.innerHTML = `<div class="markdown-body">${marked.parse(text)}</div>`;
       container.dataset.loaded = 'true';
     } catch (e) {
-      container.innerHTML = '<div class="alert alert-danger">Error loading document.</div>';
+      console.error("Markdown render error:", e);
+      container.innerHTML = `<div class="alert alert-danger">
+        <strong>Error loading document:</strong> ${e.message}
+        <br><br>
+        <small style="font-family: monospace;">Check the browser console for more details.</small>
+      </div>`;
     }
   }
 
