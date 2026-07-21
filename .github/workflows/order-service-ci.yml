@@ -1,0 +1,35 @@
+name: Order Service CI
+
+on:
+  push:
+    branches: [ "main", "feat/*" ]
+    paths:
+      - 'services/order-service/**'
+      - 'packages/shared-contracts/**'
+      - 'packages/shared-middleware/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'services/order-service/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run Linter
+      run: npm run lint --workspace=@cloudmart/order-service --if-present
+
+    - name: Run Tests in Order Service
+      run: npm run test --workspace=@cloudmart/order-service

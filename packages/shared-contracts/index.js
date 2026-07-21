@@ -9,23 +9,19 @@
  *   const { Events, createOrderCreatedEvent } = require('@cloudmart/shared-contracts');
  */
 
-// ──────────────────────────────────────────
 // EVENT NAME CONSTANTS
-// ──────────────────────────────────────────
 const Events = {
-  ORDER_CREATED:      'OrderCreatedEvent',
-  PAYMENT_SUCCESS:    'PaymentSuccessEvent',
-  PAYMENT_FAILED:     'PaymentFailedEvent',
-  STOCK_RESERVED:     'StockReservedEvent',
-  STOCK_RELEASED:     'StockReleasedEvent',
-  ORDER_SHIPPED:      'OrderShippedEvent',
-  USER_REGISTERED:    'UserRegisteredEvent',
+  ORDER_CREATED: "OrderCreatedEvent",
+  PAYMENT_SUCCESS: "PaymentSuccessEvent",
+  PAYMENT_FAILED: "PaymentFailedEvent",
+  STOCK_RESERVED: "StockReservedEvent",
+  STOCK_RELEASED: "StockReleasedEvent",
+  ORDER_SHIPPED: "OrderShippedEvent",
+  USER_REGISTERED: "UserRegisteredEvent",
 };
 
-// ──────────────────────────────────────────
 // EVENT FACTORIES
 // These ensure every event has a consistent structure.
-// ──────────────────────────────────────────
 
 /**
  * @param {object} payload
@@ -82,18 +78,16 @@ const createUserRegisteredEvent = (payload) => ({
   payload,
 });
 
-// ──────────────────────────────────────────
 // QUEUE / EXCHANGE NAMES
-// ──────────────────────────────────────────
 const Queues = {
-  ORDER_EVENTS:        'cloudmart.orders',
-  PAYMENT_EVENTS:      'cloudmart.payments',
-  NOTIFICATION_EVENTS: 'cloudmart.notifications',
-  ANALYTICS_EVENTS:    'cloudmart.analytics',
+  ORDER_EVENTS: "cloudmart.orders",
+  PAYMENT_EVENTS: "cloudmart.payments",
+  NOTIFICATION_EVENTS: "cloudmart.notifications",
+  ANALYTICS_EVENTS: "cloudmart.analytics",
 };
 
 const Exchange = {
-  MAIN: 'cloudmart.events',
+  MAIN: "cloudmart.events",
 };
 
 module.exports = {

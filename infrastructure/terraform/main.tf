@@ -12,7 +12,6 @@ provider "azurerm" {
   features {}
 }
 
-# ---- Resource Group ----
 resource "azurerm_resource_group" "cloudmart" {
   name     = var.resource_group_name
   location = var.location
@@ -23,7 +22,6 @@ resource "azurerm_resource_group" "cloudmart" {
   }
 }
 
-# ---- Azure Container Registry ----
 resource "azurerm_container_registry" "cloudmart_acr" {
   name                = var.acr_name
   resource_group_name = azurerm_resource_group.cloudmart.name
@@ -36,7 +34,6 @@ resource "azurerm_container_registry" "cloudmart_acr" {
   }
 }
 
-# ---- Azure Kubernetes Service ----
 resource "azurerm_kubernetes_cluster" "cloudmart_aks" {
   name                = var.aks_cluster_name
   location            = azurerm_resource_group.cloudmart.location
@@ -63,7 +60,6 @@ resource "azurerm_kubernetes_cluster" "cloudmart_aks" {
   }
 }
 
-# ---- Grant AKS access to ACR ----
 resource "azurerm_role_assignment" "aks_acr_pull" {
   principal_id                     = azurerm_kubernetes_cluster.cloudmart_aks.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"

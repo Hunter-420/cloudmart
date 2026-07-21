@@ -23,7 +23,7 @@ const authenticate = (req, res, next) => {
   }
 
   // Strategy A: Local Dev Bypass
-  if (env === 'development' && token === 'dev-token') {
+  if ((env === 'development' || env === 'test') && token === 'dev-token') {
     req.user = {
       id: 'dev-user-123',
       email: 'dev@cloudmart.dev',
