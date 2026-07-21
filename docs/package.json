@@ -1,8 +1,0 @@
-{
-  "name": "cloudmart-docs",
-  "version": "1.0.0",
-  "description": "Local server for CloudMart Docs to avoid CORS file:// issues",
-  "scripts": {
-    "start": "npx serve . -p 8080"
-  }
-}
