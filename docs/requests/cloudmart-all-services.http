@@ -1,0 +1,198 @@
+@baseUrl = http://localhost:3000
+@authToken = {{login_request.response.body.token}}
+
+### ============================================================
+###  AUTH SERVICE
+### ============================================================
+
+### [1] Register a new user
+# @name register_request
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "nischal@cloudmart.dev",
+  "password": "Secret@1234",
+  "firstName": "Nischal",
+  "lastName": "Dev"
+}
+
+### [2] Login and capture token
+# @name login_request
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nischal@cloudmart.dev",
+  "password": "Secret@1234"
+}
+
+### [3] Get current user profile
+GET {{baseUrl}}/api/auth/profile
+Authorization: Bearer {{authToken}}
+
+
+### ============================================================
+###  PRODUCT SERVICE
+### ============================================================
+
+### [4] List all products
+GET {{baseUrl}}/api/products?page=1&limit=10
+
+### [5] Get a product by ID
+@productId = prod-001
+GET {{baseUrl}}/api/products/{{productId}}
+
+### [6] Create a product (admin)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Gaming Headset Pro",
+  "description": "7.1 Surround sound, noise-cancelling mic, 40hr battery",
+  "price": 89.99,
+  "categoryId": "cat-electronics",
+  "stock": 75
+}
+
+### [7] Update a product
+PUT {{baseUrl}}/api/products/{{productId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "price": 79.99,
+  "stock": 120
+}
+
+### [8] Delete a product
+DELETE {{baseUrl}}/api/products/{{productId}}
+Authorization: Bearer {{authToken}}
+
+
+### ============================================================
+###  CART SERVICE
+### ============================================================
+
+### [9] Get my cart
+GET {{baseUrl}}/api/cart
+Authorization: Bearer {{authToken}}
+
+### [10] Add item to cart
+POST {{baseUrl}}/api/cart/items
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "productId": "prod-001",
+  "quantity": 2
+}
+
+### [11] Remove item from cart
+DELETE {{baseUrl}}/api/cart/items/prod-001
+Authorization: Bearer {{authToken}}
+
+### [12] Clear entire cart
+DELETE {{baseUrl}}/api/cart
+Authorization: Bearer {{authToken}}
+
+
+### ============================================================
+###  ORDER SERVICE
+### ============================================================
+
+### [13] Create an order (publishes OrderCreatedEvent to RabbitMQ)
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+X-Correlation-ID: trace-test-001
+
+{
+  "cartId": "cart-8890",
+  "shippingAddressId": "addr-ktm-001",
+  "paymentMethodId": "pm_test_card_visa"
+}
+
+### [14] Get order status
+@orderId = ord-556677
+GET {{baseUrl}}/api/orders/{{orderId}}
+Authorization: Bearer {{authToken}}
+
+### [15] List all my orders
+GET {{baseUrl}}/api/orders
+Authorization: Bearer {{authToken}}
+
+
+### ============================================================
+###  PAYMENT SERVICE
+### ============================================================
+
+### [16] Simulate Stripe webhook (payment success)
+POST {{baseUrl}}/api/payments/webhook
+Content-Type: application/json
+Stripe-Signature: t=1609459200,v1=test_sig
+
+{
+  "type": "payment_intent.succeeded",
+  "data": {
+    "object": {
+      "id": "pi_test_123",
+      "metadata": { "orderId": "ord-556677" },
+      "amount": 5998
+    }
+  }
+}
+
+
+### ============================================================
+###  INVENTORY SERVICE
+### ============================================================
+
+### [17] Check stock for a product
+GET {{baseUrl}}/api/inventory/prod-001
+Authorization: Bearer {{authToken}}
+
+### [18] Reserve stock for an order
+POST {{baseUrl}}/api/inventory/reserve
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "orderId": "ord-556677",
+  "items": [
+    { "productId": "prod-001", "quantity": 2 }
+  ]
+}
+
+
+### ============================================================
+###  HEALTH CHECKS (direct to each service)
+### ============================================================
+
+### API Gateway health
+GET http://localhost:3001/health
+
+### Auth Service health
+GET http://localhost:3002/health
+
+### Product Service health
+GET http://localhost:3003/health
+
+### Cart Service health
+GET http://localhost:3004/health
+
+### Order Service health
+GET http://localhost:3005/health
+
+### Payment Service health
+GET http://localhost:3006/health
+
+### Inventory Service health
+GET http://localhost:3007/health
+
+### Notification Service health
+GET http://localhost:3008/health
+
+### Analytics Service health
+GET http://localhost:3009/health

@@ -1,0 +1,22 @@
+{
+  "name": "cloudmart-monorepo",
+  "version": "1.0.0",
+  "description": "CloudMart e-commerce platform — NPM Workspaces monorepo (Node.js + React)",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "infra:up": "docker-compose up -d postgres rabbitmq redis",
+    "infra:down": "docker-compose down",
+    "infra:full": "docker-compose up -d",
+    "product-service": "npm run dev --workspace=@cloudmart/product-service",
+    "auth-service": "npm run dev --workspace=@cloudmart/auth-service",
+    "customer-ui": "npm run dev --workspace=@cloudmart/customer-ui",
+    "admin-ui": "npm run dev --workspace=@cloudmart/admin-ui"
+  }
+}

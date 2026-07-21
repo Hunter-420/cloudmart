@@ -1,0 +1,173 @@
+version: '3.8'
+
+services:
+  # ---- Infrastructure ----
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: cloudmart_admin
+      POSTGRES_PASSWORD: cloudmart_pass
+      POSTGRES_DB: cloudmart
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudmart_admin"]
+      interval: 10s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+
+  # ---- API Gateway ----
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - '3000:3001'
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      AUTH_SERVICE_URL: http://auth-service:3002
+      PRODUCT_SERVICE_URL: http://product-service:3003
+      CART_SERVICE_URL: http://cart-service:3004
+      ORDER_SERVICE_URL: http://order-service:3005
+      PAYMENT_SERVICE_URL: http://payment-service:3006
+    depends_on:
+      - auth-service
+      - product-service
+      - order-service
+
+  # ---- Auth Service ----
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - '3002:3002'
+    environment:
+      PORT: 3002
+      NODE_ENV: development
+      DATABASE_URL: postgresql://cloudmart_admin:cloudmart_pass@postgres:5432/cloudmart
+      JWT_SECRET: super_secret_jwt_key_change_in_production
+      JWT_EXPIRES_IN: 1h
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---- Product Service ----
+  product-service:
+    build: ./services/product-service
+    ports:
+      - '3003:3003'
+    environment:
+      PORT: 3003
+      NODE_ENV: development
+      DATABASE_URL: postgresql://cloudmart_admin:cloudmart_pass@postgres:5432/cloudmart
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---- Cart Service ----
+  cart-service:
+    build: ./services/cart-service
+    ports:
+      - '3004:3004'
+    environment:
+      PORT: 3004
+      NODE_ENV: development
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ---- Order Service ----
+  order-service:
+    build: ./services/order-service
+    ports:
+      - '3005:3005'
+    environment:
+      PORT: 3005
+      NODE_ENV: development
+      DATABASE_URL: postgresql://cloudmart_admin:cloudmart_pass@postgres:5432/cloudmart
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      INVENTORY_SERVICE_URL: http://inventory-service:3007
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # ---- Payment Service ----
+  payment-service:
+    build: ./services/payment-service
+    ports:
+      - '3006:3006'
+    environment:
+      PORT: 3006
+      NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      STRIPE_SECRET_KEY: sk_test_your_key_here
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  # ---- Inventory Service ----
+  inventory-service:
+    build: ./services/inventory-service
+    ports:
+      - '3007:3007'
+    environment:
+      PORT: 3007
+      NODE_ENV: development
+      DATABASE_URL: postgresql://cloudmart_admin:cloudmart_pass@postgres:5432/cloudmart
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---- Notification Service ----
+  notification-service:
+    build: ./services/notification-service
+    ports:
+      - '3008:3008'
+    environment:
+      PORT: 3008
+      NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      SENDGRID_API_KEY: SG.your_key_here
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  # ---- Analytics Service ----
+  analytics-service:
+    build: ./services/analytics-service
+    ports:
+      - '3009:3009'
+    environment:
+      PORT: 3009
+      NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

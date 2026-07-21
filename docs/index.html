@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudMart Documentation Hub</title>
+  <meta name="description" content="Complete architecture documentation, API reference, and development workflow for the CloudMart e-commerce platform.">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+  <div class="layout">
+    <!-- ======= SIDEBAR ======= -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: text-bottom; margin-right: 4px;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+          </svg>
+          CloudMart
+        </div>
+        <div class="brand-sub">Architecture Docs</div>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search sidebar..." aria-label="Search">
+      </div>
+
+      <nav class="nav">
+        <div class="nav-section-label">Getting Started</div>
+        <a class="nav-link" data-target="intro">Introduction</a>
+        <a class="nav-link" data-target="workflow">Parallel Workflow</a>
+
+        <div class="nav-section-label">API Reference</div>
+        <a class="nav-link" data-target="gateway-api">API Gateway</a>
+        <a class="nav-link" data-target="auth-api">Auth Service</a>
+        <a class="nav-link" data-target="product-api">Product Service</a>
+        <a class="nav-link" data-target="cart-api">Cart Service</a>
+        <a class="nav-link" data-target="order-api">Order Service</a>
+        <a class="nav-link" data-target="payment-api">Payment Service</a>
+        <a class="nav-link" data-target="inventory-api">Inventory Service</a>
+        <a class="nav-link" data-target="notification-api">Notification Service</a>
+        <a class="nav-link" data-target="analytics-api">Analytics Service</a>
+
+        <div class="nav-section-label">Architecture Volumes</div>
+        <a class="nav-link" data-target="vol-01">Vol 01 · Vision &amp; Requirements</a>
+        <a class="nav-link" data-target="vol-02">Vol 02 · System Architecture</a>
+        <a class="nav-link" data-target="vol-03">Vol 03 · Microservice Design</a>
+        <a class="nav-link" data-target="vol-04">Vol 04 · Azure Infrastructure</a>
+        <a class="nav-link" data-target="vol-05">Vol 05 · Terraform IaC</a>
+        <a class="nav-link" data-target="vol-06">Vol 06 · Docker</a>
+        <a class="nav-link" data-target="vol-07">Vol 07 · Kubernetes / AKS</a>
+        <a class="nav-link" data-target="vol-08">Vol 08 · CI/CD GitHub Actions</a>
+        <a class="nav-link" data-target="vol-09">Vol 09 · Monitoring &amp; SRE</a>
+        <a class="nav-link" data-target="vol-10">Vol 10 · Security</a>
+        <a class="nav-link" data-target="vol-11">Vol 11 · Database Design</a>
+        <a class="nav-link" data-target="vol-12">Vol 12 · Dev Roadmap</a>
+      </nav>
+    </aside>
+
+    <!-- ======= MAIN CONTENT ======= -->
+    <main class="content">
+
+      <!-- ============================================================ -->
+      <!-- INTRODUCTION                                                   -->
+      <!-- ============================================================ -->
+      <section id="intro" class="tab active">
+        <div class="page-header">
+          <h1>Welcome to CloudMart</h1>
+          <p class="lead">The foundational e-commerce microservices platform built for Azure.</p>
+        </div>
+
+        <div class="card">
+          <h2>Project Overview</h2>
+          <p>CloudMart is an enterprise-grade e-commerce application designed to demonstrate the power of microservices architecture, containerization, and automated cloud deployments.</p>
+          <p>The system is developed in parallel by two core engineers:</p>
+          <ul>
+            <li><strong><a href="https://www.khanalnischal.com.np" target="_blank" rel="noopener">Nischal Khanal</a></strong> - Leading Operations, Orchestration, and Analytics.</li>
+            <li><strong><a href="https://github.com/GajanandaAdhikari" target="_blank" rel="noopener">Gajananda Mani Adhikari</a></strong> - Leading Data, Users, Finance, and Notifications.</li>
+          </ul>
+          <p>This documentation hub acts as our single source of truth. By strictly adhering to the API contracts defined here, Nischal and Gajananda can work at full velocity simultaneously.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WORKFLOW                                                       -->
+      <!-- ============================================================ -->
+      <section id="workflow" class="tab">
+        <div class="page-header">
+          <h1>Parallel Development Workflow</h1>
+          <p class="lead">How <strong><a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong> and <strong><a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong> build 9 microservices simultaneously.</p>
+        </div>
+
+        <div class="alert alert-info">
+          <strong>Strategy:</strong> Contract-First Development. Lock the API request/response contracts below, then use mocks to simulate other team members' services while building your own.
+        </div>
+
+        <h2>Team Ownership Map</h2>
+        <div class="two-col">
+          <div class="dev-card">
+            <div class="dev-badge dev-a">N</div>
+            <div>
+              <h3><a href="https://www.khanalnischal.com.np" target="_blank" style="color:inherit;text-decoration:none;">Nischal Khanal</a></h3>
+              <ul>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 17l4 4 4-4M12 21V3"/></svg> API Gateway</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg> Order Service <em>(Saga)</em></li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Inventory Service</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Analytics Service</li>
+              </ul>
+            </div>
+          </div>
+          <div class="dev-card">
+            <div class="dev-badge dev-b">G</div>
+            <div>
+              <h3><a href="https://github.com/GajanandaAdhikari" target="_blank" style="color:inherit;text-decoration:none;">Gajananda Mani Adhikari</a></h3>
+              <ul>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Auth Service</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg> Product Service</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Cart Service</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Payment Service</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg> Notification Service</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h2>Step-by-Step Parallel Workflow</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <strong>Lock the Contracts</strong>
+              <p>Both <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a> and <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a> study this API Reference. Agree on request bodies, response shapes, and event schemas.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <strong>Start Docker Infrastructure</strong>
+              <p>Run <code>docker-compose up postgres rabbitmq redis -d</code> to spin up shared data stores locally.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <strong>Build Against Mocks, Not Each Other</strong>
+              <p>When Nischal builds Order Service, he mocks the Payment Service response. When Gajananda builds Payment Service, he tests it by manually publishing <code>OrderCreatedEvent</code> JSON to RabbitMQ via the management UI.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <strong>Integration Day</strong>
+              <p>Run <code>docker-compose up --build</code>. Replace mocks with real local DNS (e.g. <code>http://payment-service:3006</code>). Run the Postman test collection.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>RabbitMQ Event Architecture</h2>
+        
+        <div class="card">
+          <h3>The Fanout / Pub-Sub Pattern (Multiple Consumers)</h3>
+          <p>CloudMart uses a <strong>Pub-Sub pattern</strong> using RabbitMQ Exchanges. A single event (like <code>OrderCreatedEvent</code>) is published to the <code>cloudmart.events</code> <strong>exchange</strong>.</p>
+          <p>Multiple independent queues are bound to this exchange. This allows <strong>Payment Service</strong>, <strong>Notification Service</strong>, and <strong>Analytics Service</strong> to ALL receive a copy of the exact same <code>OrderCreatedEvent</code> message simultaneously, <strong>without affecting each other</strong>.</p>
+          <ul>
+            <li>If the Notification Service crashes, the Payment Service still processes the payment.</li>
+            <li>When Notification comes back online, it reads the backlog from its dedicated queue.</li>
+          </ul>
+        </div>
+
+        <h3>All Event Contracts</h3>
+        <p>Defined centrally in <code>packages/shared-contracts</code>.</p>
+
+        <h4>1. OrderCreatedEvent</h4>
+        <pre><code>{
+  "eventType": "OrderCreatedEvent",
+  "eventId": "evt-a1b2c3",
+  "timestamp": "2026-07-21T10:00:00Z",
+  "payload": {
+    "orderId": "ord-556677",
+    "userId": "user-abc123",
+    "email": "nischal@cloudmart.dev",
+    "totalAmount": 59.98,
+    "items": [{ "productId": "prod-001", "quantity": 2, "price": 29.99 }],
+    "shippingAddress": { "city": "Kathmandu", "country": "Nepal" },
+    "paymentMethodId": "pm_1234"
+  }
+}</code></pre>
+
+        <h4>2. PaymentSuccessEvent</h4>
+        <pre><code>{
+  "eventType": "PaymentSuccessEvent",
+  "eventId": "evt-b2c3d4",
+  "timestamp": "2026-07-21T10:01:00Z",
+  "payload": {
+    "orderId": "ord-556677",
+    "paymentIntentId": "pi_123abc",
+    "amountCharged": 5998
+  }
+}</code></pre>
+
+        <h4>3. PaymentFailedEvent</h4>
+        <pre><code>{
+  "eventType": "PaymentFailedEvent",
+  "eventId": "evt-c3d4e5",
+  "timestamp": "2026-07-21T10:01:00Z",
+  "payload": {
+    "orderId": "ord-556677",
+    "reason": "card_declined"
+  }
+}</code></pre>
+
+        <h4>4. UserRegisteredEvent</h4>
+        <pre><code>{
+  "eventType": "UserRegisteredEvent",
+  "eventId": "evt-d4e5f6",
+  "timestamp": "2026-07-21T09:30:00Z",
+  "payload": {
+    "userId": "user-abc123",
+    "email": "nischal@cloudmart.dev",
+    "firstName": "Nischal"
+  }
+}</code></pre>
+
+      </section>
+
+      <!-- API GATEWAY -->
+      <section id="gateway-api" class="tab">
+        <div class="page-header">
+          <h1>API Gateway</h1>
+          <p class="lead">Single entry point. Proxies traffic to internal services.</p>
+        </div>
+      </section>
+
+      <!-- AUTH API -->
+      <section id="auth-api" class="tab">
+        <div class="page-header">
+          <h1>Auth Service</h1>
+          <p class="lead">Handles user registration. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- PRODUCT API -->
+      <section id="product-api" class="tab">
+        <div class="page-header">
+          <h1>Product Service</h1>
+          <p class="lead">Catalog management. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- CART API -->
+      <section id="cart-api" class="tab">
+        <div class="page-header">
+          <h1>Cart Service</h1>
+          <p class="lead">Redis backed carts. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- ORDER API -->
+      <section id="order-api" class="tab">
+        <div class="page-header">
+          <h1>Order Service</h1>
+          <p class="lead">Saga Orchestrator. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- PAYMENT API -->
+      <section id="payment-api" class="tab">
+        <div class="page-header">
+          <h1>Payment Service</h1>
+          <p class="lead">Stripe integration. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- INVENTORY API -->
+      <section id="inventory-api" class="tab">
+        <div class="page-header">
+          <h1>Inventory Service</h1>
+          <p class="lead">Stock management. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- NOTIFICATION API -->
+      <section id="notification-api" class="tab">
+        <div class="page-header">
+          <h1>Notification Service</h1>
+          <p class="lead">Event-driven emails. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong>.</p>
+        </div>
+      </section>
+
+      <!-- ANALYTICS API -->
+      <section id="analytics-api" class="tab">
+        <div class="page-header">
+          <h1>Analytics Service</h1>
+          <p class="lead">Event-driven metrics. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong>.</p>
+        </div>
+      </section>
+
+
+      <!-- VOLUMES (Dynamically populated by script.js) -->
+      <section id="vol-01" class="tab"><div class="page-header"><h1>Volume 01</h1></div><div id="vol-01-content"></div></section>
+      <section id="vol-02" class="tab"><div class="page-header"><h1>Volume 02</h1></div><div id="vol-02-content"></div></section>
+      <section id="vol-03" class="tab"><div class="page-header"><h1>Volume 03</h1></div><div id="vol-03-content"></div></section>
+      <section id="vol-04" class="tab"><div class="page-header"><h1>Volume 04</h1></div><div id="vol-04-content"></div></section>
+      <section id="vol-05" class="tab"><div class="page-header"><h1>Volume 05</h1></div><div id="vol-05-content"></div></section>
+      <section id="vol-06" class="tab"><div class="page-header"><h1>Volume 06</h1></div><div id="vol-06-content"></div></section>
+      <section id="vol-07" class="tab"><div class="page-header"><h1>Volume 07</h1></div><div id="vol-07-content"></div></section>
+      <section id="vol-08" class="tab"><div class="page-header"><h1>Volume 08</h1></div><div id="vol-08-content"></div></section>
+      <section id="vol-09" class="tab"><div class="page-header"><h1>Volume 09</h1></div><div id="vol-09-content"></div></section>
+      <section id="vol-10" class="tab"><div class="page-header"><h1>Volume 10</h1></div><div id="vol-10-content"></div></section>
+      <section id="vol-11" class="tab"><div class="page-header"><h1>Volume 11</h1></div><div id="vol-11-content"></div></section>
+      <section id="vol-12" class="tab"><div class="page-header"><h1>Volume 12</h1></div><div id="vol-12-content"></div></section>
+
+    </main>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
