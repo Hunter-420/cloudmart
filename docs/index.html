@@ -181,6 +181,18 @@
     "reason": "card_declined"
   }
 }</code></pre>
+
+        <h4>4. UserRegisteredEvent</h4>
+        <pre><code class="language-json">{
+  "eventType": "UserRegisteredEvent",
+  "eventId": "evt-d4e5f6",
+  "timestamp": "2026-07-21T09:30:00Z",
+  "payload": {
+    "userId": "user-abc123",
+    "email": "nischal@cloudmart.dev",
+    "firstName": "Nischal"
+  }
+}</code></pre>
       </section>
 
       <!-- ============================================================ -->
@@ -194,32 +206,29 @@
           <p class="lead">Single entry point. Proxies traffic to internal services on port 3001.</p>
         </div>
         <p>The gateway routes based on URL paths:</p>
-        <ul style="padding-left:1.5rem; margin-bottom: 2rem;">
-          <li><code>/api/auth/*</code> → Auth Service (3002)</li>
-          <li><code>/api/products/*</code> → Product Service (3003)</li>
-          <li><code>/api/cart/*</code> → Cart Service (3004)</li>
-          <li><code>/api/orders/*</code> → Order Service (3005)</li>
-          <li><code>/api/payments/*</code> → Payment Service (3006)</li>
-          <li><code>/api/inventory/*</code> → Inventory Service (3007)</li>
+        <ul style="padding-left:1.5rem; margin-bottom: 2rem; font-family: 'Fira Code', monospace;">
+          <li>/api/auth/* → Auth Service (3002)</li>
+          <li>/api/products/* → Product Service (3003)</li>
+          <li>/api/cart/* → Cart Service (3004)</li>
+          <li>/api/orders/* → Order Service (3005)</li>
+          <li>/api/payments/* → Payment Service (3006)</li>
+          <li>/api/inventory/* → Inventory Service (3007)</li>
         </ul>
       </section>
 
       <!-- AUTH API -->
       <section id="auth-api" class="tab">
         <div class="page-header">
-          <h1>Auth Service</h1>
-          <p class="lead">Handles user registration and JWTs.</p>
+          <h1>Auth Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3002)</span></h1>
+          <p class="lead">Handles user registration, login, and JWT token issuance. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong></p>
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge post">POST</span>
-            <span class="ep-path">/api/auth/register</span>
-          </div>
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/auth/register</span></div>
           <div class="ep-body">
             <table class="table">
               <tr><th width="150">Body</th><td><code>email</code> <span class="req">*</span>, <code>password</code> <span class="req">*</span>, <code>firstName</code> <span class="req">*</span>, <code>lastName</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Returns JWT token and user info.</td></tr>
+              <tr><th>Response 201</th><td>Returns JWT token and user info.</td></tr>
             </table>
             <pre><code class="language-json">{
   "id": "usr-123",
@@ -231,18 +240,31 @@
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge post">POST</span>
-            <span class="ep-path">/api/auth/login</span>
-          </div>
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/auth/login</span></div>
           <div class="ep-body">
             <table class="table">
               <tr><th width="150">Body</th><td><code>email</code> <span class="req">*</span>, <code>password</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Returns JWT token.</td></tr>
+              <tr><th>Response 200</th><td>Returns JWT token.</td></tr>
             </table>
             <pre><code class="language-json">{
   "token": "eyJhbG...",
   "expiresIn": 3600
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/auth/profile</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>Current logged in user profile.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "id": "usr-123",
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe"
 }</code></pre>
           </div>
         </div>
@@ -251,19 +273,16 @@
       <!-- PRODUCT API -->
       <section id="product-api" class="tab">
         <div class="page-header">
-          <h1>Product Service</h1>
-          <p class="lead">Catalog management (CRUD).</p>
+          <h1>Product Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3003)</span></h1>
+          <p class="lead">Catalog management (CRUD). <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong></p>
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge get">GET</span>
-            <span class="ep-path">/api/products</span>
-          </div>
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/products</span></div>
           <div class="ep-body">
             <table class="table">
-              <tr><th width="150">Query</th><td><code>category</code>, <code>page</code>, <code>limit</code></td></tr>
-              <tr><th>Response</th><td>List of products.</td></tr>
+              <tr><th width="150">Query</th><td><code>category</code> (string), <code>page</code> (number), <code>limit</code> (number)</td></tr>
+              <tr><th>Response 200</th><td>List of products.</td></tr>
             </table>
             <pre><code class="language-json">{
   "total": 3,
@@ -278,24 +297,69 @@
 }</code></pre>
           </div>
         </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/products/:id</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Params</th><td><code>id</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>Single product.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "id": "prod-001",
+  "name": "Wireless Mouse",
+  "price": 29.99,
+  "stock": 150
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/products</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;admin_token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Body</th><td><code>name</code> <span class="req">*</span>, <code>price</code> <span class="req">*</span>, <code>description</code>, <code>categoryId</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 201</th><td>Created product object.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge put">PUT</span><span class="ep-path">/api/products/:id</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;admin_token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Body</th><td>Any product fields to update.</td></tr>
+              <tr><th>Response 200</th><td>Updated product object.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge del">DEL</span><span class="ep-path">/api/products/:id</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;admin_token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 204</th><td>No content.</td></tr>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- CART API -->
       <section id="cart-api" class="tab">
         <div class="page-header">
-          <h1>Cart Service</h1>
-          <p class="lead">Redis backed shopping carts.</p>
+          <h1>Cart Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3004)</span></h1>
+          <p class="lead">Redis backed shopping carts. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong></p>
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge get">GET</span>
-            <span class="ep-path">/api/cart</span>
-          </div>
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/cart</span></div>
           <div class="ep-body">
             <table class="table">
               <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Current user's cart.</td></tr>
+              <tr><th>Response 200</th><td>Current user's cart.</td></tr>
             </table>
             <pre><code class="language-json">{
   "cartId": "cart-user123",
@@ -308,14 +372,32 @@
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge post">POST</span>
-            <span class="ep-path">/api/cart/items</span>
-          </div>
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/cart/items</span></div>
           <div class="ep-body">
             <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
               <tr><th width="150">Body</th><td><code>productId</code> <span class="req">*</span>, <code>quantity</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Updated cart.</td></tr>
+              <tr><th>Response 200</th><td>Updated cart with new total.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge del">DEL</span><span class="ep-path">/api/cart/items/:productId</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 204</th><td>Item removed.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge del">DEL</span><span class="ep-path">/api/cart</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 204</th><td>Cart cleared entirely.</td></tr>
             </table>
           </div>
         </div>
@@ -324,19 +406,17 @@
       <!-- ORDER API -->
       <section id="order-api" class="tab">
         <div class="page-header">
-          <h1>Order Service</h1>
-          <p class="lead">Creates orders and fires <code>OrderCreatedEvent</code>.</p>
+          <h1>Order Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3005)</span></h1>
+          <p class="lead">Creates orders and fires <code>OrderCreatedEvent</code>. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong></p>
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge post">POST</span>
-            <span class="ep-path">/api/orders</span>
-          </div>
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/orders</span></div>
           <div class="ep-body">
             <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
               <tr><th width="150">Body</th><td><code>cartId</code> <span class="req">*</span>, <code>shippingAddressId</code> <span class="req">*</span>, <code>paymentMethodId</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Pending order creation.</td></tr>
+              <tr><th>Response 201</th><td>Pending order creation. Publishes <code>OrderCreatedEvent</code>.</td></tr>
             </table>
             <pre><code class="language-json">{
   "orderId": "ord-9876",
@@ -346,29 +426,164 @@
 }</code></pre>
           </div>
         </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/orders</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>List of orders for current user.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/orders/:id</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>Detailed order state including items and payment status.</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAYMENT API -->
+      <section id="payment-api" class="tab">
+        <div class="page-header">
+          <h1>Payment Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3006)</span></h1>
+          <p class="lead">Stripe integration and Webhooks. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong></p>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/payments/intent</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Body</th><td><code>orderId</code> <span class="req">*</span>, <code>amount</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 201</th><td>Returns a Stripe client secret for frontend checkout.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "clientSecret": "pi_123_secret_456"
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/payments/webhook</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Stripe-Signature</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Body</th><td>Stripe raw payload</td></tr>
+              <tr><th>Response 200</th><td><code>{ "received": true }</code> - Publishes <code>PaymentSuccessEvent</code>.</td></tr>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- INVENTORY API -->
       <section id="inventory-api" class="tab">
         <div class="page-header">
-          <h1>Inventory Service</h1>
-          <p class="lead">Stock verification and reservation.</p>
+          <h1>Inventory Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3007)</span></h1>
+          <p class="lead">Stock verification and reservation. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong></p>
         </div>
 
         <div class="endpoint">
-          <div class="ep-header">
-            <span class="badge post">POST</span>
-            <span class="ep-path">/api/inventory/reserve</span>
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/inventory/:productId</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th>Response 200</th><td>Current stock levels.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "productId": "prod-001",
+  "availableStock": 150,
+  "reservedStock": 0,
+  "totalStock": 150
+}</code></pre>
           </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/inventory/reserve</span></div>
           <div class="ep-body">
             <table class="table">
               <tr><th width="150">Body</th><td><code>orderId</code> <span class="req">*</span>, <code>items: [{ productId, quantity }]</code> <span class="req">*</span></td></tr>
-              <tr><th>Response</th><td>Success or 422 if stock insufficient.</td></tr>
+              <tr><th>Response 200</th><td>Success or 422 if stock insufficient.</td></tr>
             </table>
             <pre><code class="language-json">{
   "success": true,
   "reservationId": "res-1234",
   "reservedUntil": "2026-07-21T10:30:00Z"
+}</code></pre>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge post">POST</span><span class="ep-path">/api/inventory/release</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Body</th><td><code>reservationId</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>Releases reserved stock back to available pool (e.g. if payment fails).</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- NOTIFICATION API -->
+      <section id="notification-api" class="tab">
+        <div class="page-header">
+          <h1>Notification Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3008)</span></h1>
+          <p class="lead">Handles emails and SMS. Primarily an event consumer, but exposes endpoints for preferences. <strong>Developer: <a href="https://github.com/GajanandaAdhikari" target="_blank">Gajananda Mani Adhikari</a></strong></p>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/notifications/preferences</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th>Response 200</th><td>User notification preferences.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "emailMarketing": true,
+  "orderUpdates": true,
+  "smsAlerts": false
+}</code></pre>
+          </div>
+        </div>
+        
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge put">PUT</span><span class="ep-path">/api/notifications/preferences</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Body</th><td><code>emailMarketing</code>, <code>orderUpdates</code>, <code>smsAlerts</code></td></tr>
+              <tr><th>Response 200</th><td>Updated preferences.</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ANALYTICS API -->
+      <section id="analytics-api" class="tab">
+        <div class="page-header">
+          <h1>Analytics Service <span style="font-size: 1rem; font-weight: normal; margin-left: 1rem;">(Port 3009)</span></h1>
+          <p class="lead">Aggregates sales metrics. Primarily an event consumer, exposes endpoints for Admin UI. <strong>Developer: <a href="https://www.khanalnischal.com.np" target="_blank">Nischal Khanal</a></strong></p>
+        </div>
+
+        <div class="endpoint">
+          <div class="ep-header"><span class="badge get">GET</span><span class="ep-path">/api/analytics/dashboard</span></div>
+          <div class="ep-body">
+            <table class="table">
+              <tr><th width="150">Headers</th><td><code>Authorization: Bearer &lt;admin_token&gt;</code> <span class="req">*</span></td></tr>
+              <tr><th width="150">Query</th><td><code>timeframe</code> (day, week, month)</td></tr>
+              <tr><th>Response 200</th><td>Aggregated metrics.</td></tr>
+            </table>
+            <pre><code class="language-json">{
+  "totalRevenue": 45290.50,
+  "ordersCount": 1240,
+  "topProducts": [
+    { "productId": "prod-001", "sales": 300 }
+  ]
 }</code></pre>
           </div>
         </div>

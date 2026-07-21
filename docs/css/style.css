@@ -322,6 +322,8 @@ code { font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #f1f
 .markdown-body p { margin-bottom: 1rem; color: var(--text); }
 .markdown-body ul, .markdown-body ol { padding-left: 2rem; margin-bottom: 1rem; color: var(--text); }
 .markdown-body li { margin-bottom: 0.25rem; }
+.markdown-body strong, .markdown-body b { font-weight: 700; color: var(--text); }
+.markdown-body em, .markdown-body i { font-style: italic; }
 .markdown-body a { color: var(--accent); text-decoration: none; }
 .markdown-body a:hover { text-decoration: underline; }
 .markdown-body blockquote { border-left: 4px solid var(--accent); padding-left: 1rem; margin: 1.5rem 0; color: var(--text-muted); background: #f8fafc; padding: 1rem; border-radius: 0.25rem; }

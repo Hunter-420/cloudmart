@@ -3,8 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs  = document.querySelectorAll('.tab');
   const searchInput = document.getElementById('search-input');
 
-  // Configure marked.js to use highlight.js for code blocks
+  // Custom renderer to add IDs to headers for TOC support
+  const renderer = new marked.Renderer();
+  renderer.heading = function(text, level, raw) {
+    // Generate a simple ID from the text
+    const id = raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
+    return `<h${level} id="${id}">${text}</h${level}>\n`;
+  };
+
   marked.setOptions({
+    renderer: renderer,
     highlight: function(code, lang) {
       if (lang && hljs.getLanguage(lang)) {
         return hljs.highlight(code, { language: lang }).value;
@@ -13,15 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const activate = (targetId) => {
-    tabs.forEach(t  => t.classList.toggle('active', t.id === targetId));
-    links.forEach(l => l.classList.toggle('active', l.dataset.target === targetId));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    history.pushState(null, '', '#' + targetId);
+  const activate = (targetId, preventScroll = false) => {
+    // Check if it's an internal TOC link (meaning it doesn't match a main tab ID)
+    const isTab = Array.from(tabs).some(t => t.id === targetId);
+    
+    if (isTab) {
+      tabs.forEach(t  => t.classList.toggle('active', t.id === targetId));
+      links.forEach(l => l.classList.toggle('active', l.dataset.target === targetId));
+      if (!preventScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+      history.pushState(null, '', '#' + targetId);
 
-    // If it's a volume tab, load the markdown
-    if (targetId.startsWith('vol-')) {
-      loadVolume(targetId);
+      if (targetId.startsWith('vol-')) {
+        loadVolume(targetId);
+      }
+    } else {
+      // It's likely a TOC hash jump. Let the browser handle it natively.
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -32,12 +50,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Support direct URL hash navigation
+  // Handle clicking internal links in the markdown body
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a');
+    if (target && target.getAttribute('href') && target.getAttribute('href').startsWith('#')) {
+      const hash = target.getAttribute('href').replace('#', '');
+      // If it's not a tab link, let's smoothly scroll to it within the document
+      const isTab = Array.from(tabs).some(t => t.id === hash);
+      if (!isTab) {
+        e.preventDefault();
+        activate(hash, true);
+        history.pushState(null, '', '#' + hash);
+      }
+    }
+  });
+
+  // Support direct URL hash navigation on load
   const hash = window.location.hash.replace('#', '');
-  if (hash && document.getElementById(hash)) {
-    activate(hash);
+  if (hash) {
+    // We might need to activate the parent tab first if it's a deep link, but for simplicity:
+    // We check if it's a tab, if so, load it. If not, load intro.
+    const isTab = Array.from(tabs).some(t => t.id === hash);
+    if (isTab) {
+      activate(hash);
+    } else {
+      activate('intro');
+      // If it's a deep link to an ID, we could scroll to it after rendering, but that's complex with lazy loading.
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
   } else {
-    // Default to intro
     activate('intro');
   }
 
@@ -70,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!res.ok) throw new Error('Failed to load');
       const text = await res.text();
       
-      // Parse markdown and inject
       container.innerHTML = `<div class="markdown-body">${marked.parse(text)}</div>`;
       container.dataset.loaded = 'true';
     } catch (e) {
@@ -83,19 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase();
       
-      // 1. Filter Sidebar Links
-      let hasVisibleLinks = false;
       links.forEach(link => {
         const text = link.textContent.toLowerCase();
         if (text.includes(term)) {
           link.style.display = 'block';
-          hasVisibleLinks = true;
         } else {
           link.style.display = 'none';
         }
       });
 
-      // 2. Filter API Endpoints currently visible on the page
       const endpoints = document.querySelectorAll('.tab.active .endpoint');
       endpoints.forEach(ep => {
         const text = ep.textContent.toLowerCase();
