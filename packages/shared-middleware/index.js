@@ -43,4 +43,6 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = { requestLogger, notFound, errorHandler };
+const { authenticate } = require('./auth');
+
+module.exports = { requestLogger, notFound, errorHandler, authenticate };
