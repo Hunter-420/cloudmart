@@ -102,7 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'vol-09': 'volume-09-monitoring-logging-sre.md',
       'vol-10': 'volume-10-security-architecture.md',
       'vol-11': 'volume-11-database-design.md',
-      'vol-12': 'volume-12-development-roadmap.md'
+      'vol-12': 'volume-12-development-roadmap.md',
+      'vol-13': 'volume-13-testing-and-integration.md'
     };
 
     const fileName = fileMap[targetId];
