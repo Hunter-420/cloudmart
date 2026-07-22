@@ -93,3 +93,5 @@ app.get('/api/auth/profile', (req, res) => {
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log('[auth-service] running on port', PORT));
 module.exports = app;
+
+//git push 
