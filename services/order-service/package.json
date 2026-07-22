@@ -3,13 +3,27 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node index.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "db:push": "prisma db push"
   },
   "dependencies": {
+    "@prisma/client": "5.22.0",
     "amqplib": "^2.0.1",
     "cors": "^2.8.6",
     "express": "^4.22.2",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
     "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "jest-mock-extended": "^4.0.1",
+    "prettier": "^3.9.6",
+    "prisma": "5.22.0"
   }
 }
